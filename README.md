@@ -103,7 +103,7 @@ A.squash = Neuron.squash.TANH;
 A.bias = 1;
 ```
 
-### Layers
+## Layers
 
 Una capa es básicamente una matriz de neuronas, pueden hacer prácticamente las mismas cosas que las neuronas, pero hacen que el proceso de programación sea más rápido.
 ```js
