@@ -222,3 +222,73 @@ ___rate___: La velocidad de aprendizaje es la rapidez con la que una red abandon
 ___shuffle___: puede especificar si el conjunto de entrenamiento está ordenado al azar o no.
 
 ___error___: El 'error' es el error mínimo que se puede alcanzar durante el entrenamiento, si se logra, el entrenamiento se detiene.
+
+
+En base a esto podemos ver graficamente como synapticjs representa cada elemento de una red neuronal de la siguiente manera:
+
+![synapticjs](/synapticjs.jpg)
+
+# ___Ejemplo___
+
+El ejemplo se basa en el uso de redes neuronales para la clasificación de los dígitos escritos a mano. Para lograr buenos resultados, la red debe ser entrenada adecuadamente. Por lo tanto, necesitamos un conjunto de datos llamado conjunto de entrenamiento. En nuestro ejemplo, usaremos los números MNIST, un conjunto de miles de imágenes binarias de 28x28px de números manuscritos del 0 al 9:
+
+![mnist](/mnist.jpg)
+
+La base de datos MNIST que contiene 60,000 ejemplos para capacitación y 10,000 ejemplos para pruebas puede descargarse del sitio web de LeCun. En lugar de descargar la base de datos y convertir los datos a imágenes reales, podemos usar los útiles números MNIST de la biblioteca, que crean conjuntos de prueba y entrenamiento automáticamente.
+
+Se crea un conjunto de entrenamiento de 700 imágenes y un conjunto de prueba con 20 elementos. Al crear los conjuntos manualmente, es importante asegurarse de que no haya elementos duplicados en los conjuntos. La biblioteca de dígitos MNIST lo verifica automáticamente.
+
+```js
+const mnist = require('mnist'); 
+
+const set = mnist.set(700, 20);
+
+const trainingSet = set.training;
+const testSet = set.test;
+```
+
+Después de crear los datos para entrenamiento y pruebas, podemos configurar la red. Utilizaremos la biblioteca synaptic.js, que nos brinda la posibilidad de crear una red neuronal y configurar varios parámetros. En primer lugar, tenemos que determinar cuántas neuronas de entrada y salida se necesitan. Como el tamaño de cada imagen es 28x28px, el número de píxeles que la red debe tomar como entrada es 28 x 28 = 784. Los dígitos deben asignarse a una de las diez clases, por lo que el número de neuronas de salida será 10. Además, La red debe tener al menos una capa oculta, que en este ejemplo está configurada para consistir en 100 neuronas (mientras mayor cantidad de neuronas tenga la capa oculta es mejor porque la red neuronal aprende de manera más eficiente). Luego se crea un elemento Network el cual representa a la red neuronal y se le asignan las capas de entrada, oculta y salida.
+
+```js
+const synaptic = require('synaptic');
+
+const Layer = synaptic.Layer;
+const Network = synaptic.Network;
+const Trainer = synaptic.Trainer;
+
+const inputLayer = new Layer(784);
+const hiddenLayer = new Layer(100);
+const outputLayer = new Layer(10);
+
+inputLayer.project(hiddenLayer);
+hiddenLayer.project(outputLayer);
+
+const myNetwork = new Network({
+    input: inputLayer,
+    hidden: [hiddenLayer],
+    output: outputLayer
+});
+```
+
+Para entrenar la red con nuestro conjunto de entrenamiento, podemos usar la clase Trainer provista por synaptic.js. La función train() toma los datos utilizados para el entrenamiento y una lista de parámetros para la configuración del entrenador.
+
+```js
+const trainer = new Trainer(myNetwork);
+trainer.train(trainingSet, {
+    rate: .2,
+    iterations: 20,
+    error: .1,
+    shuffle: true,
+    log: 1,
+    cost: Trainer.cost.CROSS_ENTROPY
+});
+```
+Para entender la idea general, en este ejemplo, establecemos el número máximo de iteraciones en 20 para asegurarnos de que no tenemos que esperar horas antes de que finalice la capacitación. Hay que tener en cuenta que la red no se entrenará muy bien después de solo 20 iteraciones. Para obtener mejores resultados, hay que aumentar el número y ser pacientes.
+
+Una vez finalizada la capacitación, se puede usar el testSet para verificar qué tan bien funciona la clasificación de la red. Para esto, podemos usar la función actiavte() de la red, que toma el elemento para clasificarlo como parámetro. Para verificar el resultado, se puede imprimir y comparar con el resultado esperado, el código se adaptó para poder obtener mejor el resultado esperado y el obtenido.
+
+
+En este caso hay dos archivos:
+
+* network-train: se encarga de entrenar la red neuronal, una vez entrenada almacena ésta en formato JSON dentro de un archivo llamado __MiRed.txt__. Aquí se puede agrandar el conjunto de datos de entrenamiento a gusto del programador y tambien indicar los valores deseados en la funcion ___train()___
+* network-activate: se encarga de leer el archivo generado por network-train y probar la red neuronal para que estime un numero manuscrito y verificar la eficiencia de la misma.
