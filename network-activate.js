@@ -13,15 +13,12 @@ var myNetwork;
 var jsonRed;
 
 fs.readFile('./MiRed.txt', function read(err, data) {
-    if (err) throw err;
-    // console.log(data);
-    // console.log(JSON.parse(data));
+    if (err) throw err;    
     jsonRed = JSON.parse(data);
     activarRed();
 });
 
-function activarRed() {
-    // console.log(jsonRed);
+function activarRed() {    
     myNetwork = Network.fromJSON(jsonRed);    
     
     console.log("------------------------------------");
