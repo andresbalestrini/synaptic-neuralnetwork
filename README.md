@@ -292,3 +292,68 @@ En este caso hay dos archivos:
 
 * network-train: se encarga de entrenar la red neuronal, una vez entrenada almacena ésta en formato JSON dentro de un archivo llamado __MiRed.txt__. Aquí se puede agrandar el conjunto de datos de entrenamiento a gusto del programador y tambien indicar los valores deseados en la funcion ___train()___
 * network-activate: se encarga de leer el archivo generado por network-train y probar la red neuronal para que estime un numero manuscrito y verificar la eficiencia de la misma.
+
+
+# __Output__
+
+### ___Durante entrenamiento___
+```
+iterations 1 error 17.47259305289848 rate 0.2
+iterations 2 error 15.870530551865883 rate 0.2
+iterations 3 error 15.170010351225319 rate 0.2
+iterations 4 error 14.081863604188392 rate 0.2
+iterations 5 error 12.700330092486244 rate 0.2
+iterations 6 error 11.694267676879644 rate 0.2
+iterations 7 error 9.440174716020122 rate 0.2
+iterations 8 error 8.7920359161951 rate 0.2
+iterations 9 error 8.003758931197508 rate 0.2
+iterations 10 error 7.816490574933599 rate 0.2
+iterations 11 error 7.690610766693717 rate 0.2
+iterations 12 error 7.5447115360965515 rate 0.2
+iterations 13 error 7.203960108696961 rate 0.2
+iterations 14 error 7.2863641829738715 rate 0.2
+iterations 15 error 7.510015765261187 rate 0.2
+iterations 16 error 7.5947539080355835 rate 0.2
+iterations 17 error 7.191556203780224 rate 0.2
+iterations 18 error 6.479364431319518 rate 0.2
+iterations 19 error 6.829469409252428 rate 0.2
+iterations 20 error 7.015654033795359 rate 0.2
+red guardada!
+```
+
+### ___Estimacion___
+```
+------------------------------------
+myNetwork.activate(testSet[0].input)
+------------------------------------
+[ 6.170489648516075e-8,
+  6.039379606460554e-12,
+  2.1402847669688358e-13,
+  5.130093639834185e-9,
+  0.000006437275992795015,
+  4.563392459245027e-8,
+  7.955783423174425e-22,
+  0.9998091433437847,
+  1.0414072076185629e-14,
+  5.834936515709641e-9 ]
+------------------------------------
+softmax
+------------------------------------
+[ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ]
+------------------------------------
+testSet[0].output
+------------------------------------
+[ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ]
+------------------------------------
+Results:
+------------------------------------
+La red neuronal creía que el dígito era un 7
+cuando en realidad era un 7
+------------------------------------
+```
+
+# Como usarlo ?
+
+Para entrenar la red neuronal `node network-train.js`
+
+Para probar la red neuronal `node network-activate.js`
